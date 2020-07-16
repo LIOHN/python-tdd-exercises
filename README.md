@@ -8,8 +8,6 @@ COMPLETED 16/07/2020, 21;56
 [![Build Status](https://travis-ci.org/LIOHN/python-tdd-exercises.svg?branch=master)](https://travis-ci.org/LIOHN/python-tdd-exercises/builds)
 [![Coverage Status](https://coveralls.io/repos/LIOHN/python-tdd-exercises/badge.png?branch=master)](https://coveralls.io/r/LIOHN/python-tdd-exercises?branch=master)
 
-After you fork, edit this `README.md` and rename "bast" to your GitHub username or namespace to make the badges point to your fork.
-
 
 ## Inspiration
 - [Python Koans](https://github.com/gregmalcolm/python_koans)
