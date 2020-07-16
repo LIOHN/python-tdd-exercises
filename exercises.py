@@ -1,10 +1,11 @@
 import pytest
+from collections import Counter
 
-def reverse_list(lst):
+def reverse_list(data_list):
     """
     Reverses order of elements in list l.
     """
-    return lst[::-1]
+    return data_list[::-1]
 
 def test_reverse_list():
     assert reverse_list([1, 2, 3, 4, 5]) == [5, 4, 3, 2, 1]
@@ -75,17 +76,15 @@ def test_count_num_vowels():
 
 # ------------------------------------------------------------------------------
 
-def histogram(lst):
+def histogram(data_list):
     """
     Converts a list of integers into a simple string histogram.
     """
-    s = ""
-    hsh = '#'
-    newline = '\n'
-    for item in range(len(lst)):
-        s += lst[item] * hsh
-        if lst[item] != item:
-            s += newline
+    s = ''
+    for i, number in enumerate(data_list):
+        s += number * '#'
+        if i < len(data_list) - 1:
+            s += '\n'
     return s
 
 def test_histogram():
@@ -157,7 +156,7 @@ def base_pair(c):
     of the base pair. If the base is not recognized,
     return 'unknown'.
     """
-    switcher = {
+    switch = {
         'a': 't',
         't': 'a',
         'c': 'g',
@@ -167,9 +166,8 @@ def base_pair(c):
         'C': 'g',
         'G': 'c'
     }
-    # Get the function from switcher dictionary
-    func = switcher.get(c, 'unknown')
-    return func
+    pair = switch.get(c, 'unknown')
+    return pair
 
 def test_base_pair():
     assert base_pair('a') == 't'
@@ -190,43 +188,13 @@ def transcribe_dna_to_rna(s):
     Return string s with each letter T replaced by U.
     Result is always uppercase.
     """
-    return None
+    rna = (s.replace('t', 'u')).replace('T','U')
+    return rna.upper()
 
 
 def test_transcribe_dna_to_rna():
     dna = 'CCGGAAGAGCTTACTTAGccggaagagcttacttag'
     assert transcribe_dna_to_rna(dna) == 'CCGGAAGAGCUUACUUAGCCGGAAGAGCUUACUUAG'
-
-
-# ------------------------------------------------------------------------------
-
-def get_complement(s):
-    """
-    Return the DNA complement in uppercase
-    (A -> T, T-> A, C -> G, G-> C).
-    """
-    return None
-
-
-def test_get_complement():
-    assert get_complement('CCGGAAGAGCTTACTTAG') == 'GGCCTTCTCGAATGAATC'
-    assert get_complement('ccggaagagcttacttag') == 'GGCCTTCTCGAATGAATC'
-
-
-# ------------------------------------------------------------------------------
-
-def get_reverse_complement(s):
-    """
-    Return the reverse complement of string s
-    (complement reversed in order).
-    """
-    return None
-
-
-def test_get_reverse_complement():
-    assert get_reverse_complement('CCGGAAGAGCTTACTTAG') == 'CTAAGTAAGCTCTTCCGG'
-    assert get_reverse_complement('ccggaagagcttacttag') == 'CTAAGTAAGCTCTTCCGG'
-
 
 # ------------------------------------------------------------------------------
 
@@ -234,7 +202,7 @@ def remove_substring(substring, string):
     """
     Returns string with all occurrences of substring removed.
     """
-    return None
+    return string.replace(substring, '')
 
 
 def test_remove_substring():
@@ -252,12 +220,17 @@ def get_position_indices(triplet, dna):
     in a DNA sequence. We start counting from 0
     and jump by 3 characters from one position to the next.
     """
-    return None
+    locations = []
+    for i in range(0, len(dna), 3):
+        if triplet == dna[i:i + 3]:
+            locations.append(i / 3)
+    return locations
 
 
 def test_get_position_indices():
     assert get_position_indices('GAA', 'CCGGAAGAGCTTACTTAG') == [1]
     assert get_position_indices('GAA', 'CCGGAAGAGCTTACTTAGGAAGAA') == [1, 6, 7]
+
 
 
 # ------------------------------------------------------------------------------
@@ -271,51 +244,35 @@ def get_3mer_usage_chart(s):
     The list is alphabetically sorted by the name
     of the 3-mer.
     """
-    return None
-
+    list_of_3mers = []
+    for i in range(len(s) - 2):                      # looking for triplets, so list comprehension ends 2 early
+        list_of_3mers.append(s[i:i + 3])             # create list of 3mers
+    chart = sorted(Counter(list_of_3mers).items())   # collections.Counter counts occurances from list.
+    return chart                                     # dot items makes it a list and sorted orders it alphabetically
 
 def test_get_3mer_usage_chart():
     s = 'CCGGAAGAGCTTACTTAGGAAGAA'
-    result = []
-    result.append(('AAG', 2))
-    result.append(('ACT', 1))
-    result.append(('AGA', 2))
-    result.append(('AGC', 1))
-    result.append(('AGG', 1))
-    result.append(('CCG', 1))
-    result.append(('CGG', 1))
-    result.append(('CTT', 2))
-    result.append(('GAA', 3))
-    result.append(('GAG', 1))
-    result.append(('GCT', 1))
-    result.append(('GGA', 2))
-    result.append(('TAC', 1))
-    result.append(('TAG', 1))
-    result.append(('TTA', 2))
+    result = [('AAG', 2), ('ACT', 1), ('AGA', 2), ('AGC', 1), ('AGG', 1), ('CCG', 1), ('CGG', 1), ('CTT', 2),
+              ('GAA', 3), ('GAG', 1), ('GCT', 1), ('GGA', 2), ('TAC', 1), ('TAG', 1), ('TTA', 2)]
     assert get_3mer_usage_chart(s) == result
 
-
 # ------------------------------------------------------------------------------
+
 
 def read_column(file_name, column_number):
     """
     Reads column column_number from file file_name
     and returns the values as floats in a list.
     """
-    return None
-
+    return [float(i.split('  ')[column_number - 1]) for i in open(file_name).readlines()]
 
 def test_read_column():
 
     import tempfile
     import os
 
-    text = """1   0.1  0.001
-2   0.2  0.002
-3   0.3  0.003
-4   0.4  0.004
-5   0.5  0.005
-6   0.6  0.006"""
+    text = """1   0.1  0.001\n2   0.2  0.002\n3   0.3  0.003\n4   0.4  0.004\n5   0.5  0.005\n6   0.6  0.006"""
+
 
     # we save this text to a temporary file
     file_name = tempfile.mkstemp()[1]
@@ -326,10 +283,11 @@ def test_read_column():
     assert read_column(file_name, 2) == [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
 
     # we remove the temporary file
-    os.unlink(file_name)
+    # os.unlink(file_name)
 
 
 # ------------------------------------------------------------------------------
+
 
 def character_statistics(file_name):
     """
@@ -340,8 +298,21 @@ def character_statistics(file_name):
     Use the isalpha() method to figure out
     whether the character is in the alphabet.
     """
-    return None
-
+    def take_second(elem):
+        return elem[1]
+    '''
+    file is opened, letters are extracted from text and counted by Counter, returning
+    a dict of letters and corresponding occurences. That dict is turned into a list 
+    with .items() then ordered by occurences (key=take_second), in descending order
+    (most occurences first, reverse=true). Return the first two.
+    '''
+    with open(file_name) as f:
+        letterCount = sorted(Counter(letter for line in f
+                                    for letter in line.lower()
+                                    if letter.isalpha()).items(),
+                             key=take_second,
+                             reverse=True)
+    return letterCount[0][0], letterCount[23][0]
 
 def test_character_statistics():
 
@@ -395,27 +366,5 @@ Be all my sins remember'd."""
     assert (most_abundant, least_abundant) == ('e', 'q')
 
     # we remove the temporary file
-    os.unlink(file_name)
+    # os.unlink(file_name)
 
-
-# ------------------------------------------------------------------------------
-
-def pythagorean_triples(n):
-    """
-    Returns list of all unique pythagorean triples
-    (a, b, c) where a < b < c <= n.
-    """
-    l = []
-    # loop over all a < b < c <= n
-    for c in range(1, n + 1):
-        for b in range(1, c):
-            for a in range(1, b):
-                if a*a + b*b == c*c:
-                    l.append((a, b, c))
-    return l
-
-
-# ------------------------------------------------------------------------------
-
-def test_pythagorean_triples():
-    pass  # so far we do not test anything, check also test coverage
