@@ -1,36 +1,35 @@
+import pytest
 
-def reverse_list(l):
+def reverse_list(lst):
     """
     Reverses order of elements in list l.
     """
-    return None
-
+    return lst[::-1]
 
 def test_reverse_list():
     assert reverse_list([1, 2, 3, 4, 5]) == [5, 4, 3, 2, 1]
 
-
 # ------------------------------------------------------------------------------
 
-def reverse_string(s):
+def reverse_string(string):
     """
     Reverses order of characters in string s.
     """
-    return None
+    return string[::-1]
 
 
 def test_reverse_string():
     assert reverse_string("foobar") == "raboof"
 
-
 # ------------------------------------------------------------------------------
 
-def is_english_vowel(c):
+def is_english_vowel(letter):
     """
-    Returns True if c is an english vowel
+    Returns True if "letter" is an english vowel
     and False otherwise.
     """
-    return None
+    vowel_list = ['a','e','i','o','u','A','E','I','O','U','y','Y']
+    return letter in vowel_list
 
 
 def test_is_english_vowel():
@@ -50,15 +49,17 @@ def test_is_english_vowel():
     assert not is_english_vowel('z')
     assert not is_english_vowel('?')
 
-
 # ------------------------------------------------------------------------------
 
 def count_num_vowels(s):
     """
     Returns the number of vowels in a string s.
     """
-    return None
-
+    vowel_count = 0
+    vowel_list = ['a','e','i','o','u','A','E','I','O','U','y','Y']
+    for i, v in enumerate(s):
+        vowel_count += 1 if v in vowel_list else 0
+    return vowel_count
 
 def test_count_num_vowels():
     sentence = "hey ho let's go"
@@ -72,17 +73,23 @@ def test_count_num_vowels():
                    Who will dance on the floor in the round"""
     assert count_num_vowels(paragraph) == 54
 
-
 # ------------------------------------------------------------------------------
 
-def histogram(l):
+def histogram(lst):
     """
     Converts a list of integers into a simple string histogram.
     """
-    return None
-
+    s = ""
+    hsh = '#'
+    newline = '\n'
+    for item in range(len(lst)):
+        s += lst[item] * hsh
+        if lst[item] != item:
+            s += newline
+    return s
 
 def test_histogram():
+    assert histogram([1, 4]) == '#\n####'
     assert histogram([2, 5, 1]) == '##\n#####\n#'
 
 
@@ -93,13 +100,14 @@ def get_word_lengths(s):
     Returns a list of integers representing
     the word lengths in string s.
     """
-    return None
+    return list(map(len, s.split()))
 
 
 def test_get_word_lengths():
+    text = "Hello World"
+    assert get_word_lengths(text) == [5, 5]
     text = "Three tomatoes are walking down the street"
     assert get_word_lengths(text) == [5, 8, 3, 7, 4, 3, 6]
-
 
 # ------------------------------------------------------------------------------
 
@@ -108,7 +116,7 @@ def find_longest_word(s):
     Returns the longest word in string s.
     In case there are several, return the first.
     """
-    return None
+    return max(s.split(), key=len)
 
 
 def test_find_longest_word():
@@ -116,6 +124,10 @@ def test_find_longest_word():
     assert find_longest_word(text) == "tomatoes"
     text = "foo foo1 foo2 foo3"
     assert find_longest_word(text) == "foo1"
+    text = """Django is a Python based free and open-source web 
+           framework that follows the MVC architectural pattern
+           """
+    assert find_longest_word(text) == "architectural"
 
 
 # ------------------------------------------------------------------------------
@@ -125,12 +137,15 @@ def validate_dna(s):
     Return True if the DNA string only contains characters
     a, c, t, or g (lower or uppercase). False otherwise.
     """
-    return None
+    valid_nucleotides = 'actgACTG'
+    return all(i in valid_nucleotides for i in s)
 
 
 def test_validate_dna():
+    assert validate_dna('AGAGTGGCAT')
     assert validate_dna('CCGGAAGAGCTTACTTAGccggaagagcttacttag')
-    assert not validate_dna('xCCGGAAGAGCTTACTTAGccggaagagcttacttag')
+    assert not validate_dna('definitely not a DNA sequence')
+    assert not validate_dna('CCGxTAGGAcaag')
     assert not validate_dna('CCxGGAAGAGCTTACTTAGccggaagagcttacttag')
 
 
@@ -142,8 +157,19 @@ def base_pair(c):
     of the base pair. If the base is not recognized,
     return 'unknown'.
     """
-    return None
-
+    switcher = {
+        'a': 't',
+        't': 'a',
+        'c': 'g',
+        'g': 'c',
+        'A': 't',
+        'T': 'a',
+        'C': 'g',
+        'G': 'c'
+    }
+    # Get the function from switcher dictionary
+    func = switcher.get(c, 'unknown')
+    return func
 
 def test_base_pair():
     assert base_pair('a') == 't'
@@ -156,7 +182,6 @@ def test_base_pair():
     assert base_pair('G') == 'c'
     assert base_pair('x') == 'unknown'
     assert base_pair('foo') == 'unknown'
-
 
 # ------------------------------------------------------------------------------
 
